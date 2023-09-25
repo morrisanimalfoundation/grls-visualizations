@@ -36,16 +36,14 @@ df_profile['current_age'] = today.year - born.year - (today.month < born.month)
 age_counts = df_profile['current_age'].value_counts().sort_index()
 
 # Create a bar chart using Seaborn
-sns.set_style('whitegrid', {'grid.color': '#ECECEC'})
+sns.set_style('whitegrid', {'grid.color': '#ECECEC'})  # HEX code for the grey colour of the grid lines
 plt.figure(figsize=(8, 6))  # Adjust the figure size as needed
 sns.barplot(x=age_counts.index, y=age_counts.values, color='#FF5F1F', width=0.6)  # Adjust bar colour using HEX code
 plt.yticks(range(0, int(age_counts.max() + 100), 400))  # Y-axis ticks in increments of 400
 sns.despine(left=True, bottom=True)  # Remove borders
 
 # Set font properties for title and axis labels
-title_font = {'weight': 'bold', 'size': 16}
 label_font = {'weight': 'bold'}
-plt.title('AGE DISTRIBUTION AS OF {}, {}'.format(today.strftime("%B").upper(), today.year), fontdict=title_font)
 plt.xlabel('Age (in Years)', fontdict=label_font)
 plt.ylabel('Dogs (count)', fontdict=label_font)
 
