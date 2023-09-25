@@ -16,11 +16,12 @@ Author: Neha Bhomia
 Created Date: September 19th, 2023
 """
 
-from py_secrets import dirpath, vizpath
+from py_secrets import dirpath, vizpath, fontpath
 import pandas as pd
 from datetime import date
 import matplotlib.pyplot as plt
 import seaborn as sns
+import matplotlib.font_manager as font_manager
 
 # reading in our dataset and force setting data types
 # note: adds 01 as default day in date values (raw data format yyyy-mm)
@@ -38,14 +39,16 @@ age_counts = df_profile['current_age'].value_counts().sort_index()
 # Create a bar chart using Seaborn
 sns.set_style('whitegrid', {'grid.color': '#ECECEC'})  # HEX code for the grey colour of the grid lines
 plt.figure(figsize=(8, 6))  # Adjust the figure size as needed
-sns.barplot(x=age_counts.index, y=age_counts.values, color='#FF5F1F', width=0.6)  # Adjust bar colour using HEX code
+sns.barplot(x=age_counts.index, y=age_counts.values, color='#FF5F1F', width=0.7)  # Adjust bar colour using HEX code
 plt.yticks(range(0, int(age_counts.max() + 100), 400))  # Y-axis ticks in increments of 400
 sns.despine(left=True, bottom=True)  # Remove borders
 
 # Set font properties for title and axis labels
-label_font = {'weight': 'bold'}
-plt.xlabel('Age (in Years)', fontdict=label_font)
-plt.ylabel('Dogs (count)', fontdict=label_font)
+prop = font_manager.FontProperties(fname=fontpath+'Buntype - BundaySans-Bold.otf')
+plt.xlabel('AGE (YEARS)', fontproperties=prop, fontsize=14, labelpad=12)
+plt.xticks(fontproperties=prop, fontsize=12)
+plt.ylabel('DOGS (COUNT)', fontproperties=prop, fontsize=14, labelpad=12)
+plt.yticks(fontproperties=prop, fontsize=12)
 
 # save the plot as PNG file
 plt.savefig(vizpath+"age_count.png")
