@@ -35,34 +35,22 @@ df_profile['current_age'] = today.year - born.year - (today.month < born.month)
 # Calculate the count of dogs at each age
 age_counts = df_profile['current_age'].value_counts().sort_index()
 
-# Create a bar chart using Matplotlib
-plt.figure(figsize=(8, 6))  # Adjust the figure size if needed
-plt.bar(age_counts.index, age_counts.values)
-plt.xlabel('Age (in years)')
-plt.ylabel('Dogs (count)')
-plt.title('AGE DISTRIBUTION AS OF {}, {}'.format(today.strftime("%B").upper(), today.year))
-plt.xticks(age_counts.index)
-# save the plot as PNG file
-plt.savefig(vizpath+"dog_age_count.png")
-# displaying the plot
-plt.show()
-
-# Calculate the percentage of dogs at each age
-age_percentage = (df_profile['current_age'].value_counts() / len(df_profile)) * 100
-
 # Create a bar chart using Seaborn
 sns.set_style('whitegrid', {'grid.color': '#ECECEC'})
 plt.figure(figsize=(8, 6))  # Adjust the figure size as needed
-sns.barplot(x=age_percentage.index, y=age_percentage.values, color='#FF5F1F', width=0.6)
-plt.yticks(range(0, int(age_percentage.max() + 10), 10))  # Y-axis ticks in increments of 10
+sns.barplot(x=age_counts.index, y=age_counts.values, color='#FF5F1F', width=0.6)  # Adjust bar colour using HEX code
+plt.yticks(range(0, int(age_counts.max() + 100), 400))  # Y-axis ticks in increments of 400
 sns.despine(left=True, bottom=True)  # Remove borders
+
 # Set font properties for title and axis labels
 title_font = {'weight': 'bold', 'size': 16}
 label_font = {'weight': 'bold'}
 plt.title('AGE DISTRIBUTION AS OF {}, {}'.format(today.strftime("%B").upper(), today.year), fontdict=title_font)
 plt.xlabel('Age (in Years)', fontdict=label_font)
-plt.ylabel('Dogs (%)', fontdict=label_font)
+plt.ylabel('Dogs (count)', fontdict=label_font)
+
 # save the plot as PNG file
 plt.savefig(vizpath+"dog_age_percent.png")
+
 # displaying the plot
 plt.show()
