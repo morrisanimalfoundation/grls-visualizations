@@ -50,7 +50,7 @@ plt.xlabel('Age (in Years)', fontdict=label_font)
 plt.ylabel('Dogs (count)', fontdict=label_font)
 
 # save the plot as PNG file
-plt.savefig(vizpath+"dog_age_percent.png")
+plt.savefig(vizpath+"age_count.png")
 
 # displaying the plot
 plt.show()
