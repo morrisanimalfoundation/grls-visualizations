@@ -10,7 +10,8 @@ as well as the data to generate the graphics titled:
 
 The datasets that power the visualisations and graphics on this page are:
 1. dog_profile.csv
-2.
+2. reproductive_history_female.csv
+3. reproductive_history_female.csv
 
 Author: Neha Bhomia
 Created Date: September 19th, 2023
@@ -23,15 +24,23 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import matplotlib.font_manager as font_manager
 
-# reading in our dataset and force setting data types
-# note: adds 01 as default day in date values (raw data format yyyy-mm)
+# reading in our datasets and force setting data types
+# note: parsing dates adds 01 as default day in date values if date is missing (df_profile raw data date format yyyy-mm)
 df_profile = pd.read_csv(dirpath + "dog_profile.csv", dtype={'subject_id': 'object', 'sex_status': 'category'},
                          parse_dates=['birth_date', 'enrolled_date'])
+
+df_fem = pd.read_csv(dirpath + "reproductive_history_female.csv", usecols=['subject_id', 'spayed_on_date'],
+                     parse_dates=['spayed_on_date'])
+
+df_male = pd.read_csv(dirpath + "reproductive_history_male.csv", usecols=['subject_id', 'neutered_on_date'],
+                      parse_dates=['neutered_on_date'])
+
+df_tuple = (df_profile, df_fem, df_male)
 
 
 def age_vis(dataframe):
     """
-    Creates the age distribution visualisation with age buckets (in years) on the x-axis and
+    Creates the age distribution visualisation - a bar graph - with age buckets (in years) on the x-axis and
     dog counts on the y-axis.
     :param dataframe: the dataset used to generate this visualisation
     :return: seaborn figure
@@ -67,5 +76,20 @@ def age_vis(dataframe):
     return plt.figure()
 
 
+def sex_vis(dataframe_list):
+    """
+    Creates the Sex Status visualisation - a stacked bar plot - with sex status of dogs on the X-axis and
+    the percentage of the dogs on the Y-axis.
+    :param dataframe_list: a tuple of the datasets used to create this visualisation with 3 items (in this order):
+    1. profile dataset for baseline data
+    2. female dataset and
+    3. male dataset
+    :return: plot figure
+    """
+
+    return plt.figure()
+
+
 if __name__ == "__main__":
     age_vis(df_profile)
+    sex_vis(df_tuple)
