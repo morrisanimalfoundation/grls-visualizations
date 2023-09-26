@@ -25,6 +25,11 @@ import seaborn as sns
 import matplotlib.font_manager as font_manager
 import matplotlib.ticker as mtick
 
+# suppressing warnings for category datatype
+import warnings
+warnings.filterwarnings("ignore", "is_categorical_dtype")
+warnings.filterwarnings("ignore", "use_inf_as_na")
+
 # reading in our datasets and force setting data types
 # note: parsing dates adds 01 as default day in date values if date is missing (df_profile raw data date format yyyy-mm)
 df_profile = pd.read_csv(dirpath + "dog_profile.csv", dtype={'subject_id': 'object', 'sex_status': 'category'},
