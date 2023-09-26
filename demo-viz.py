@@ -26,6 +26,7 @@ import matplotlib.font_manager as font_manager
 import matplotlib.ticker as mtick
 
 # suppressing warnings for category datatype
+# TODO: Investigate this further to prevent technical debt
 import warnings
 warnings.filterwarnings("ignore", "is_categorical_dtype")
 warnings.filterwarnings("ignore", "use_inf_as_na")
