@@ -25,33 +25,47 @@ import matplotlib.font_manager as font_manager
 
 # reading in our dataset and force setting data types
 # note: adds 01 as default day in date values (raw data format yyyy-mm)
-df_profile = pd.read_csv(dirpath+"dog_profile.csv", dtype={'subject_id': 'object', 'sex_status': 'category'},
+df_profile = pd.read_csv(dirpath + "dog_profile.csv", dtype={'subject_id': 'object', 'sex_status': 'category'},
                          parse_dates=['birth_date', 'enrolled_date'])
 
-# calculating age
-today = date.today()
-born = df_profile['birth_date'].dt
-df_profile['current_age'] = today.year - born.year - (today.month < born.month)
 
-# Calculate the count of dogs at each age
-age_counts = df_profile['current_age'].value_counts().sort_index()
+def age_vis(dataframe):
+    """
+    Creates the age distribution visualisation with age buckets (in years) on the x-axis and
+    dog counts on the y-axis.
+    :param dataframe: the dataset used to generate this visualisation
+    :return: seaborn figure
+    """
+    # calculating age
+    today = date.today()
+    born = dataframe['birth_date'].dt
+    dataframe['current_age'] = today.year - born.year - (today.month < born.month)
 
-# Create a bar chart using Seaborn
-sns.set_style('whitegrid', {'grid.color': '#ECECEC'})  # HEX code for the grey colour of the grid lines
-plt.figure(figsize=(8, 6))  # Adjust the figure size as needed
-sns.barplot(x=age_counts.index, y=age_counts.values, color='#FF5F1F', width=0.7)  # Adjust bar colour using HEX code
-plt.yticks(range(0, int(age_counts.max() + 100), 400))  # Y-axis ticks in increments of 400
-sns.despine(left=True, bottom=True)  # Remove borders
+    # Calculate the count of dogs at each age
+    age_counts = dataframe['current_age'].value_counts().sort_index()
 
-# Set font properties for title and axis labels
-prop = font_manager.FontProperties(fname=fontpath+'Buntype - BundaySans-Bold.otf')
-plt.xlabel('AGE (YEARS)', fontproperties=prop, fontsize=14, labelpad=12)
-plt.xticks(fontproperties=prop, fontsize=12)
-plt.ylabel('DOGS (COUNT)', fontproperties=prop, fontsize=14, labelpad=12)
-plt.yticks(fontproperties=prop, fontsize=12)
+    # Create a bar chart using Seaborn
+    sns.set_style('whitegrid', {'grid.color': '#ECECEC'})  # HEX code for the grey colour of the grid lines
+    plt.figure(figsize=(8, 6))  # Adjust the figure size as needed
+    sns.barplot(x=age_counts.index, y=age_counts.values, color='#FF5F1F', width=0.7)  # Adjust bar colour using HEX code
+    plt.yticks(range(0, int(age_counts.max() + 100), 400))  # Y-axis ticks in increments of 400
+    sns.despine(left=True, bottom=True)  # Remove borders
 
-# save the plot as PNG file
-plt.savefig(vizpath+"age_count.png")
+    # Set font properties for title and axis labels
+    prop = font_manager.FontProperties(fname=fontpath+'Buntype - BundaySans-Bold.otf')
+    plt.xlabel('AGE (YEARS)', fontproperties=prop, fontsize=14, labelpad=12)
+    plt.xticks(fontproperties=prop, fontsize=12)
+    plt.ylabel('DOGS (COUNT)', fontproperties=prop, fontsize=14, labelpad=12)
+    plt.yticks(fontproperties=prop, fontsize=12)
 
-# displaying the plot
-plt.show()
+    # save the plot as PNG file
+    plt.savefig(vizpath+"age_count.png")
+
+    # # displaying the plot
+    # plt.show()
+
+    return plt.figure()
+
+
+if __name__ == "__main__":
+    age_vis(df_profile)
