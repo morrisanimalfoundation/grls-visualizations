@@ -23,6 +23,7 @@ from datetime import date, datetime
 import matplotlib.pyplot as plt
 import seaborn as sns
 import matplotlib.font_manager as font_manager
+import matplotlib.ticker as mtick
 
 # reading in our datasets and force setting data types
 # note: parsing dates adds 01 as default day in date values if date is missing (df_profile raw data date format yyyy-mm)
@@ -145,42 +146,36 @@ def sex_vis(dataframes):
 
     # Calculate the percentage of dogs for each category
     percentage_baseline = df_base['sex_status'].value_counts(normalize=True).reset_index()
-    percentage_baseline.columns = ['sex_status', 'base_percent']
+    percentage_baseline.columns = ['sex_status', 'percent']
     percentage_recent = combined_df['recent_status'].value_counts(normalize=True).reset_index()
-    percentage_recent.columns = ['sex_status', 'recent_percent']
-    total_percent = pd.merge(percentage_baseline, percentage_recent)
+    percentage_recent.columns = ['sex_status', 'percent']
+    total_percent = pd.concat([percentage_baseline, percentage_recent], axis=0, keys=['BASELINE', 'YEAR X']).reset_index(level=0)
+    total_percent['percent'] = total_percent['percent'].apply(lambda x: x*100)
 
     # Creating the Grouped Seaborn Bar Plot
     sns.set_style('whitegrid', {'grid.color': '#ECECEC'})  # HEX code for the grey colour of the grid lines
     plt.figure(figsize=(8, 6))  # Adjust the figure size as needed
-    ax = sns.barplot(
-        data=total_percent,
-        x='sex_status',
-        y='base_percent',
-        color='#5499C7',  # Custom color for the baseline bars
-        label='BASELINE'
-    )
-    sns.barplot(
-        data=total_percent,
-        x='sex_status',
-        y='recent_percent',
-        color='#FF5F1F',  # Custom color for the recent bars
-        label='YEAR {}'.format('X'),  # TODO: confirm baseline year
-        ax=ax
-    )
-    plt.yticks(range(0, int(total_percent.recent_percent.max() + 10), 10))  # Y-axis ticks in increments of 10
+    ax = sns.barplot(x='sex_status', y='percent', hue='level_0', data=total_percent, width=0.8, palette=['#0288D1', '#FF5F1F'], linewidth=4)
+    plt.yticks(range(0, int(total_percent.percent.max() + 10), 10))  # Y-axis ticks in increments of 10
     sns.despine(left=True, bottom=True)  # Remove borders
 
     # Set font properties for title and axis labels
     prop = font_manager.FontProperties(fname=fontpath + 'Buntype - BundaySans-Bold.otf')
-    # plt.xlabel('SEX_STATUS', fontproperties=prop, fontsize=14, labelpad=12)
+    plt.xlabel('', fontproperties=prop, fontsize=14, labelpad=12)
     plt.xticks(fontproperties=prop, fontsize=12)
     plt.ylabel('PERCENTAGE OF DOGS', fontproperties=prop, fontsize=14, labelpad=12)
     plt.yticks(fontproperties=prop, fontsize=12)
-    plt.legend()
+
+    # Define the formatting function to add '%' to y-axis tick labels
+    def add_percent(x, pos):
+        return f"{x:.0f}%"
+
+    # Apply the formatting function to the y-axis
+    ax.yaxis.set_major_formatter(mtick.FuncFormatter(add_percent))
+    plt.legend().remove()
 
     # save the plot as PNG file
-    plt.savefig(vizpath + "age_count.png")
+    plt.savefig(vizpath + "sex_stat.png")
 
     # displaying the plot
     plt.show()
@@ -189,6 +184,5 @@ def sex_vis(dataframes):
 
 
 if __name__ == "__main__":
-    # age_vis(df_profile)
+    age_vis(df_profile)
     fig = sex_vis(df_tuple)
-    print(fig)
