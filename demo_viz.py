@@ -97,7 +97,7 @@ def sex_vis(dataframes):
     df_f = dataframes[1]
     df_m = dataframes[2]
     # Changing sex_status labels to uppercase
-    df_base['sex_status'] = df_base['sex_status'].apply(lambda x: x.upper())
+    df_base.loc[:, 'sex_status'] = df_base['sex_status'].apply(lambda x: x.upper())
 
     # TODO: create unit test that asserts unique id's in dog profile = sum of unique id's in fem and male repro hist
     # TODO: create ut for assertion that after dropping duplicates there's only one date per subject id
@@ -193,4 +193,4 @@ def sex_vis(dataframes):
 
 if __name__ == "__main__":
     age_vis(df_profile)
-    fig = sex_vis(df_tuple)
+    sex_vis(df_tuple)
