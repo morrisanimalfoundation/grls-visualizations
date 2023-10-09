@@ -96,6 +96,8 @@ def sex_vis(dataframes):
     df_base = dataframes[0][['subject_id', 'sex_status']]
     df_f = dataframes[1]
     df_m = dataframes[2]
+    # Changing sex_status labels to uppercase
+    df_base['sex_status'] = df_base['sex_status'].apply(lambda x: x.upper())
 
     # TODO: create unit test that asserts unique id's in dog profile = sum of unique id's in fem and male repro hist
     # TODO: create ut for assertion that after dropping duplicates there's only one date per subject id
@@ -134,8 +136,8 @@ def sex_vis(dataframes):
     df_recent['neutered_on_date'].fillna(dummy_date, inplace=True)
 
     # Update recent_status based on changes
-    df_recent.loc[df_recent['spayed_on_date'] != dummy_date, 'recent_status'] = 'Spayed Female'
-    df_recent.loc[df_recent['neutered_on_date'] != dummy_date, 'recent_status'] = 'Neutered Male'
+    df_recent.loc[df_recent['spayed_on_date'] != dummy_date, 'recent_status'] = 'SPAYED FEMALE'
+    df_recent.loc[df_recent['neutered_on_date'] != dummy_date, 'recent_status'] = 'NEUTERED MALE'
 
     # Combine the dataframes to get a single dataframe for plotting
     combined_df = pd.merge(df_base, df_recent)
