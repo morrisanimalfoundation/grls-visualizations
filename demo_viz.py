@@ -165,7 +165,7 @@ def sex_vis(dataframes):
     # Creating the Grouped Seaborn Bar Plot
     sns.set_style('whitegrid', {'grid.color': '#ECECEC'})  # HEX code for the grey colour of the grid lines
     plt.figure(figsize=(8, 6))  # Adjust the figure size as needed
-    ax = sns.barplot(x='sex_status', y='percent', hue='level_0', data=total_percent, width=0.8, palette=['#0288D1', '#FF5F1F'], linewidth=4)
+    ax = sns.barplot(x='sex_status', y='percent', hue='level_0', data=total_percent, width=0.7, palette=['#0288D1', '#FF5F1F'], linewidth=4)
     plt.yticks(range(0, int(total_percent.percent.max() + 10), 10))  # Y-axis ticks in increments of 10
     sns.despine(left=True, bottom=True)  # Remove borders
 
