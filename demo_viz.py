@@ -157,7 +157,9 @@ def sex_vis(dataframes):
     percentage_baseline.columns = ['sex_status', 'percent']
     percentage_recent = combined_df['recent_status'].value_counts(normalize=True).reset_index()
     percentage_recent.columns = ['sex_status', 'percent']
-    total_percent = pd.concat([percentage_baseline, percentage_recent], axis=0, keys=['BASELINE', 'YEAR X']).reset_index(level=0)
+    # Calculating the Study Year from Baseline Year (2012)
+    study_year = str(combined_df[['spayed_on_date', 'neutered_on_date']].max().max().year - 2012)
+    total_percent = pd.concat([percentage_baseline, percentage_recent], axis=0, keys=['BASELINE', 'YEAR '+study_year]).reset_index(level=0)
     total_percent['percent'] = total_percent['percent'].apply(lambda x: x*100)
 
     # Creating the Grouped Seaborn Bar Plot
@@ -180,7 +182,7 @@ def sex_vis(dataframes):
 
     # Apply the formatting function to the y-axis
     ax.yaxis.set_major_formatter(mtick.FuncFormatter(add_percent))
-    plt.legend().remove()
+    plt.legend(loc='lower center', bbox_to_anchor=(0.5, -0.15), ncol=2, frameon=False, prop=prop, fontsize=14, handleheight=2.5, borderaxespad=-0.25)
 
     # save the plot as PNG file
     plt.savefig(vizpath + "sex_stat.png")
