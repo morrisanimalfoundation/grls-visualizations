@@ -36,6 +36,9 @@ warnings.filterwarnings("ignore", "use_inf_as_na")
 df_profile = pd.read_csv(dirpath + "dog_profile.csv", dtype={'subject_id': 'object', 'sex_status': 'category'},
                          parse_dates=['birth_date', 'enrolled_date'])
 
+# earliest year of enrolment record to calculate our baseline year of study
+min_year = df_profile['enrolled_date'].min().year
+
 df_fem = pd.read_csv(dirpath + "reproductive_history_female.csv", usecols=['subject_id', 'spayed_on_date'],
                      parse_dates=['spayed_on_date'])
 
@@ -128,6 +131,8 @@ def sex_vis(dataframes):
 
     # Merge df_f and df_m to calculate recent counts
     df_recent = pd.merge(df_f, df_m, on='subject_id', how='outer')
+
+    # Adding a recent status column with default value Baseline
     df_recent['recent_status'] = 'Baseline'
 
     # Fill NaN values in spayed_date and neutered_date with a dummy date to represent no change
@@ -157,9 +162,13 @@ def sex_vis(dataframes):
     percentage_baseline.columns = ['sex_status', 'percent']
     percentage_recent = combined_df['recent_status'].value_counts(normalize=True).reset_index()
     percentage_recent.columns = ['sex_status', 'percent']
-    # Calculating the Study Year from Baseline Year (2012)
-    study_year = str(combined_df[['spayed_on_date', 'neutered_on_date']].max().max().year - 2012)
-    total_percent = pd.concat([percentage_baseline, percentage_recent], axis=0, keys=['BASELINE', 'YEAR '+study_year]).reset_index(level=0)
+
+    # Calculating the latest year of spayed/neutered on dates in the repro_history datasets
+    # for calculating our current study year for our visualisation title
+    max_year = combined_df[['spayed_on_date', 'neutered_on_date']].max().max().year
+    study_year = 'YEAR ' + str(max_year - min_year)
+
+    total_percent = pd.concat([percentage_baseline, percentage_recent], axis=0, keys=['BASELINE', study_year]).reset_index(level=0)
     total_percent['percent'] = total_percent['percent'].apply(lambda x: x*100)
 
     # Creating the Grouped Seaborn Bar Plot
