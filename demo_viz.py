@@ -25,7 +25,7 @@ import seaborn as sns
 import matplotlib.font_manager as font_manager
 import matplotlib.ticker as mtick
 
-# suppressing warnings for category datatype
+# Suppressing warnings for category datatype
 # TODO: Investigate this further to prevent technical debt
 import warnings
 warnings.filterwarnings("ignore", "is_categorical_dtype")
@@ -39,21 +39,21 @@ df_profile = pd.read_csv(dirpath + "dog_profile.csv", dtype={'subject_id': 'obje
 # earliest year of enrolment record to calculate our baseline year of study
 min_year = df_profile['enrolled_date'].min().year
 
-df_fem = pd.read_csv(dirpath + "reproductive_history_female.csv", usecols=['subject_id', 'spayed_on_date'],
-                     parse_dates=['spayed_on_date'])
 
-df_male = pd.read_csv(dirpath + "reproductive_history_male.csv", usecols=['subject_id', 'neutered_on_date'],
-                      parse_dates=['neutered_on_date'])
-
-df_tuple = (df_profile, df_fem, df_male)
-
-
-def age_vis(dataframe):
+def grls_dogs_age_distrbution_vis(dataframe):
     """
-    Creates the age distribution visualisation - a bar graph - with age buckets (in years) on the x-axis and
+    Creates the age distribution visualization - a bar graph - with age buckets (in years) on the x-axis and
     dog counts on the y-axis.
-    :param dataframe: the dataset used to generate this visualisation
-    :return: seaborn figure
+
+    Parameters
+    ----------
+    dataframe : pd.DataFrame
+        The dataset used to generate this visualization.
+
+    Returns
+    -------
+    matplotlib.figure.Figure
+        The seaborn figure object of the age distribution bar chart.
     """
     # calculating age
     today = date.today()
@@ -69,18 +69,14 @@ def age_vis(dataframe):
     sns.barplot(x=age_counts.index, y=age_counts.values, color='#FF5F1F', width=0.7)  # Adjust bar colour using HEX code
     plt.yticks(range(0, int(age_counts.max() + 100), 400))  # Y-axis ticks in increments of 400
     sns.despine(left=True, bottom=True)  # Remove borders
+    plt.xlabel('Age in years')
+    plt.ylabel('Count of Dogs')
+    plt.title('Distribution of Age in GRLS Study')
 
-    # Set font properties for title and axis labels
-    prop = font_manager.FontProperties(fname=fontpath+'Buntype - BundaySans-Bold.otf')
-    plt.xlabel('AGE (YEARS)', fontproperties=prop, fontsize=14, labelpad=12)
-    plt.xticks(fontproperties=prop, fontsize=12)
-    plt.ylabel('DOGS (COUNT)', fontproperties=prop, fontsize=14, labelpad=12)
-    plt.yticks(fontproperties=prop, fontsize=12)
-
-    # save the plot as PNG file
+    # Save the plot as PNG file
     plt.savefig(vizpath+"age_count.png")
 
-    # # displaying the plot
+    # Uncomment to display the plot
     # plt.show()
 
     return plt.figure()
@@ -203,5 +199,5 @@ def sex_vis(dataframes):
 
 
 if __name__ == "__main__":
-    age_vis(df_profile)
-    sex_vis(df_tuple)
+    grls_dogs_age_distrbution_vis(df_profile)
+    #sex_vis(df_tuple)
