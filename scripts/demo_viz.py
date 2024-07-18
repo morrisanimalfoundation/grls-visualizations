@@ -32,16 +32,15 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 
 def read_inputs() -> pd.DataFrame:
     """
-    Reads the input CSV files for dog profiles, female reproductive history, and male reproductive history.
+    Reads the input CSV file for dog profiles.
 
-    This function reads three CSV files located in the directory specified by `dirpath`:
-    1. "dog_profile.csv" - Contains dog profile information including birth, enrollment date, spayed/neutered date.
+    This function reads the CSV file located in the directory specified by `dirpath`:
+    1. "dog_profile.csv" - Contains dog profile information including birth, enrollment date, and spayed/neutered date.
 
     Returns
     -------
-    tuple
-        A tuple containing three pandas DataFrames:
-        - df_profile: DataFrame containing the dog profile data.
+    pd.DataFrame
+        A pandas DataFrame containing the dog profile data.
     """
     # Check for missing dates
     # df_profile.birth_date.value_counts()
@@ -54,7 +53,7 @@ def grls_dogs_age_distrbution_vis(dataframe) -> None:
     """
     Creates the age distribution visualization - a bar graph - with age buckets (in years) on the x-axis and
     dog counts on the y-axis.
-67
+
     Parameters
     ----------
     dataframe : pd.DataFrame
@@ -274,7 +273,3 @@ if __name__ == "__main__":
     grls_dogs_age_distrbution_vis(df_profile)
     sex_vis(df_profile)
     warnings.resetwarnings()
-
-# To do:
-# Intact bars
-# Run and lint
