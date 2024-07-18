@@ -208,7 +208,6 @@ def sex_vis(df_base: pd.DataFrame) -> None:
                                                else row['sex_status'],
                                                axis=1
                                                )
-    df_base.to_csv("./sex_status_calculations.csv", index=False)
     # Calculate percentages for new_sex_status within the filtered data
     percentage_embargo_year_sex_status = df_base[embargo_year_name].value_counts(normalize=True).reset_index()
     percentage_embargo_year_sex_status.columns = ['status', 'percent']
