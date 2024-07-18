@@ -12,17 +12,18 @@ The datasets that power the visualisations and graphics on this page are:
 1. dog_profile.csv
 """
 
-from settings import dirpath, vizpath
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-import matplotlib.font_manager as font_manager
-import matplotlib.ticker as mtick
-
 # Suppressing warnings for category datatype
 # TODO: Investigate this further to prevent technical debt
 import warnings
+
+import matplotlib.font_manager as font_manager
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
+import numpy as np
+import pandas as pd
+import seaborn as sns
+
+from settings import dirpath, embargo_year, vizpath
 
 warnings.filterwarnings("ignore", "is_categorical_dtype")
 warnings.filterwarnings("ignore", "use_inf_as_na")
@@ -68,8 +69,8 @@ def grls_dogs_age_distrbution_vis(dataframe) -> None:
     # Get todays date
     today = pd.to_datetime('today').date()
     # Calculate current age
-    dataframe['current_age'] = today.year - dataframe['birth_date'].dt.year - (
-                today.month < dataframe['birth_date'].dt.month)
+    dataframe['current_age'] = (today.year - dataframe['birth_date'].dt.year
+                                - (today.month < dataframe['birth_date'].dt.month))
     # Calculate the count of dogs at each age
     age_counts = dataframe['current_age'].value_counts().sort_index()
 
@@ -138,7 +139,10 @@ def sex_vis(df_base: pd.DataFrame) -> None:
 
     # Calculate the difference in years
     df_base['spay_neuter_year'] = np.floor(
-        np.abs((df_base['spay_neuter_date'] - df_base['enrolled_date']).dt.days / 365.25))
+        (df_base['spay_neuter_date'] - df_base['enrolled_date']).dt.days / 365.25)
+
+    # IF spay_neuter_date is before the enrolled date then set spay_neuter_year to 0
+    df_base.loc[df_base['spay_neuter_date'] < df_base['enrolled_date'], 'spay_neuter_year'] = 0
 
     # Ignore rows where spay_neuter_date is NaT by setting spay_neuter_year to NaN
     df_base['spay_neuter_year'] = df_base['spay_neuter_year'].where(df_base['spay_neuter_date'].notna())
@@ -150,9 +154,11 @@ def sex_vis(df_base: pd.DataFrame) -> None:
                                                        'sex_status'].startswith('Female')
                                                    else 'Male Neutered' if row['spay_neuter_year'] == 0 and row[
                                                        'sex_status'].startswith('Male')
-                                                   else 'Female Intact' if row['spay_neuter_year'] > 0 and row['sex_status'].startswith(
+                                                   else 'Female Intact' if row['spay_neuter_year'] > 0 and row[
+                                                       'sex_status'].startswith(
                                                        'Female')
-                                                   else 'Male Intact' if row['spay_neuter_year'] > 0 and row['sex_status'].startswith('Male')
+                                                   else 'Male Intact' if row['spay_neuter_year'] > 0 and row[
+                                                       'sex_status'].startswith('Male')
                                                    else row['sex_status'],
                                                    axis=1
                                                    )
@@ -162,48 +168,58 @@ def sex_vis(df_base: pd.DataFrame) -> None:
         normalize=True).reset_index()
     percentage_sex_status.columns = ['status', 'percent']
 
+    # Middle point
+    middle_year = int(np.floor(embargo_year / 2))
+    middle_col_name = 'year_' + str(middle_year) + '_sex_status'
     # Create the new_sex_status column for year_3
-    df_base['year_3_sex_status'] = df_base.apply(lambda row:
-                                                   row['sex_status'] if pd.isnull(row['spay_neuter_date'])
-                                                   else 'Female Spayed' if 0 < row['spay_neuter_year'] <= 3 and row[
-                                                       'sex_status'].startswith('Female')
-                                                   else 'Male Neutered' if 0 < row['spay_neuter_year'] <= 3 and row[
-                                                       'sex_status'].startswith('Male')
-                                                   else 'Female Intact' if row['spay_neuter_year'] > 3 and row['sex_status'].startswith(
-                                                       'Female')
-                                                   else 'Male Intact' if row['spay_neuter_year'] > 3 and row['sex_status'].startswith('Male')
-                                                   else row['sex_status'],
-                                                   axis=1
-                                                   )
+    df_base[middle_col_name] = df_base.apply(lambda row:
+                                             row['sex_status'] if pd.isnull(row['spay_neuter_date'])
+                                             else 'Female Spayed' if 0 < row['spay_neuter_year'] <= middle_year and row[
+                                                 'sex_status'].startswith('Female')
+                                             else 'Male Neutered' if 0 < row['spay_neuter_year'] <= middle_year and row[
+                                                 'sex_status'].startswith('Male')
+                                             else 'Female Intact' if row['spay_neuter_year'] > middle_year and row[
+                                                 'sex_status'].startswith(
+                                                 'Female')
+                                             else 'Male Intact' if row['spay_neuter_year'] > middle_year and row[
+                                                 'sex_status'].startswith('Male')
+                                             else row['sex_status'],
+                                             axis=1
+                                             )
 
     # Calculate percentages for new_sex_status within the filtered data
-    percentage_year_3_sex_status = df_base['year_3_sex_status'].value_counts(normalize=True).reset_index()
-    percentage_year_3_sex_status.columns = ['status', 'percent']
+    percentage_middle_year_sex_status = df_base[middle_col_name].value_counts(normalize=True).reset_index()
+    percentage_middle_year_sex_status.columns = ['status', 'percent']
 
+    embargo_year_name = 'year_' + str(embargo_year) + '_sex_status'
     # Create the new_sex_status column for year 5
-    df_base['year_5_sex_status'] = df_base.apply(lambda row:
-                                                   row['sex_status'] if pd.isnull(row['spay_neuter_date'])
-                                                   else 'Female Spayed' if 3 < row['spay_neuter_year'] <= 5 and row[
-                                                       'sex_status'].startswith('Female')
-                                                   else 'Male Neutered' if 3 < row['spay_neuter_year'] <= 5 and row[
-                                                       'sex_status'].startswith('Male')
-                                                   else 'Female Intact' if row['spay_neuter_year'] > 5 and row['sex_status'].startswith(
-                                                       'Female')
-                                                   else 'Male Intact' if row['spay_neuter_year'] > 5 and row['sex_status'].startswith('Male')
-                                                   else row['sex_status'],
-                                                   axis=1
-                                                   )
-
+    df_base[embargo_year_name] = df_base.apply(lambda row:
+                                               row['sex_status'] if pd.isnull(row['spay_neuter_date'])
+                                               else 'Female Spayed' if middle_year < row[
+                                                   'spay_neuter_year'] <= embargo_year and row[
+                                                   'sex_status'].startswith('Female')
+                                               else 'Male Neutered' if middle_year < row[
+                                                   'spay_neuter_year'] <= embargo_year and row[
+                                                   'sex_status'].startswith('Male')
+                                               else 'Female Intact' if row['spay_neuter_year'] > embargo_year and row[
+                                                   'sex_status'].startswith(
+                                                   'Female')
+                                               else 'Male Intact' if row['spay_neuter_year'] > embargo_year and row[
+                                                   'sex_status'].startswith('Male')
+                                               else row['sex_status'],
+                                               axis=1
+                                               )
+    df_base.to_csv("./sex_status_calculations.csv", index=False)
     # Calculate percentages for new_sex_status within the filtered data
-    percentage_year_5_sex_status = df_base['year_5_sex_status'].value_counts(normalize=True).reset_index()
-    percentage_year_5_sex_status.columns = ['status', 'percent']
+    percentage_embargo_year_sex_status = df_base[embargo_year_name].value_counts(normalize=True).reset_index()
+    percentage_embargo_year_sex_status.columns = ['status', 'percent']
 
     # Combine the DataFrames for plotting
     percentage_sex_status['Study Year'] = 'Baseline'
-    percentage_year_3_sex_status['Study Year'] = 'Year 3'
-    percentage_year_5_sex_status['Study Year'] = 'Year 5'
+    percentage_middle_year_sex_status['Study Year'] = 'Year ' + str(middle_year)
+    percentage_embargo_year_sex_status['Study Year'] = 'Year ' + str(embargo_year)
 
-    combined_df = pd.concat([percentage_sex_status, percentage_year_3_sex_status, percentage_year_5_sex_status])
+    combined_df = pd.concat([percentage_sex_status, percentage_middle_year_sex_status, percentage_embargo_year_sex_status])
 
     # Multiply percent by 100 to get percentage
     combined_df['percent'] = combined_df['percent'] * 100
