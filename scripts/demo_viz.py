@@ -53,7 +53,7 @@ def grls_dogs_age_distrbution_vis(dataframe) -> None:
     """
     Creates the age distribution visualization - a bar graph - with age buckets (in years) on the x-axis and
     dog counts on the y-axis.
-67
+
     Parameters
     ----------
     dataframe : pd.DataFrame
@@ -273,7 +273,3 @@ if __name__ == "__main__":
     grls_dogs_age_distrbution_vis(df_profile)
     sex_vis(df_profile)
     warnings.resetwarnings()
-
-# To do:
-# Intact bars
-# Run and lint
