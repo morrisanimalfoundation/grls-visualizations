@@ -4,7 +4,7 @@ Sample environment file for describing the location of resources external to the
 """
 
 project_path = '.'
-dirpath = project_path + "/data/"
+datapath = project_path + "/data/"
 vizpath = project_path + "/visualizations_output/"
 fontpath = project_path + "/grls-visualizations/"
 
