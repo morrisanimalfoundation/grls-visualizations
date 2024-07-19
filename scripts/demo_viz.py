@@ -23,7 +23,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
-from settings import dirpath, embargo_year, vizpath
+from settings import datapath, embargo_year, vizpath
 
 warnings.filterwarnings("ignore", "is_categorical_dtype")
 warnings.filterwarnings("ignore", "use_inf_as_na")
@@ -34,7 +34,7 @@ def read_inputs() -> pd.DataFrame:
     """
     Reads the input CSV file for dog profiles.
 
-    This function reads the CSV file located in the directory specified by `dirpath`:
+    This function reads the CSV file located in the directory specified by `datapath`:
     1. "dog_profile.csv" - Contains dog profile information including birth, enrollment date, and spayed/neutered date.
 
     Returns
@@ -45,7 +45,7 @@ def read_inputs() -> pd.DataFrame:
     # Check for missing dates
     # df_profile.birth_date.value_counts()
     # df_profile.enrolled_date.value_counts()
-    df_profile = pd.read_csv(dirpath + "dog_profile.csv")
+    df_profile = pd.read_csv(datapath + "dog_profile.csv")
     return df_profile
 
 
