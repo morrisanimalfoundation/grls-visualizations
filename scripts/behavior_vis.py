@@ -43,9 +43,9 @@ def behavior_categories(behavior_summary: pd.DataFrame) -> dict:
         if topic in reversed_topics:
             # Reverse the counts for specified topics
             reversed_counts = group[count_columns].apply(lambda x: x[::-1].values, axis=1)
-            results[topic] = reversed_counts.sum().tolist()
+            results[topic] = reversed_counts.avg().tolist()
         else:
-            results[topic] = group[count_columns].sum().tolist()
+            results[topic] = group[count_columns].avg().tolist()
     return results
 
 
