@@ -25,7 +25,7 @@ import matplotlib.font_manager as font_manager
 
 # reading in our dataset and force setting data types
 # note: adds 01 as default day in date values (raw data format yyyy-mm)
-df_profile = pd.read_csv(dirpath+"dog_profile.csv", dtype={'subject_id': 'object', 'sex_status': 'category'},
+df_profile = pd.read_csv(dirpath + 'dog_profile.csv', dtype={'subject_id': 'object', 'sex_status': 'category'},
                          parse_dates=['birth_date', 'enrolled_date'])
 
 # calculating age
@@ -44,14 +44,14 @@ plt.yticks(range(0, int(age_counts.max() + 100), 400))  # Y-axis ticks in increm
 sns.despine(left=True, bottom=True)  # Remove borders
 
 # Set font properties for title and axis labels
-prop = font_manager.FontProperties(fname=fontpath+'Buntype - BundaySans-Bold.otf')
+prop = font_manager.FontProperties(fname=fontpath + 'Buntype - BundaySans-Bold.otf')
 plt.xlabel('AGE (YEARS)', fontproperties=prop, fontsize=14, labelpad=12)
 plt.xticks(fontproperties=prop, fontsize=12)
 plt.ylabel('DOGS (COUNT)', fontproperties=prop, fontsize=14, labelpad=12)
 plt.yticks(fontproperties=prop, fontsize=12)
 
 # save the plot as PNG file
-plt.savefig(vizpath+"age_count.png")
+plt.savefig(vizpath + 'age_count.png')
 
 # displaying the plot
 plt.show()
