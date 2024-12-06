@@ -23,7 +23,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
-from settings import datapath, embargo_year, vizpath
+import settings
 
 warnings.filterwarnings("ignore", "is_categorical_dtype")
 warnings.filterwarnings("ignore", "use_inf_as_na")
@@ -45,7 +45,7 @@ def read_inputs() -> pd.DataFrame:
     # Check for missing dates
     # df_profile.birth_date.value_counts()
     # df_profile.enrolled_date.value_counts()
-    df_profile = pd.read_csv(datapath + "dog_profile.csv")
+    df_profile = pd.read_csv(settings.datapath + "dog_profile.csv")
     return df_profile
 
 
@@ -78,7 +78,7 @@ def grls_dogs_age_distrbution_vis(dataframe) -> None:
     # Set the HEX code for the grey colour of the grid lines
     sns.set_style('whitegrid', {'grid.color': '#ECECEC'})
     # Set font properties for title and axis labels
-    prop = font_manager.FontProperties(fname='/usr/local/share/fonts/Buntype - BundaySans-Bold.otf')
+    prop = font_manager.FontProperties(fname=f'{settings.fontpath}/Buntype - BundaySans-Bold.otf')
     # Adjust the figure size as needed
     plt.figure(figsize=(10, 6))
     # Adjust bar colour using HEX code
@@ -104,7 +104,7 @@ def grls_dogs_age_distrbution_vis(dataframe) -> None:
     plt.title(f'AGE DISTRIBUTIONS AS OF {current_month_year}', fontproperties=prop, fontsize=16)
 
     # Save the plot as PNG file
-    plt.savefig(vizpath + "age_count.png")
+    plt.savefig(settings.vizpath + "age_count.png")
 
     # Uncomment to display the plot
     # plt.show()
@@ -167,7 +167,7 @@ def sex_vis(df_base: pd.DataFrame) -> None:
     percentage_sex_status.columns = ['status', 'percent']
 
     # Middle point
-    middle_year = int(np.floor(embargo_year / 2))
+    middle_year = int(np.floor(settings.embargo_year / 2))
     middle_col_name = 'year_' + str(middle_year) + '_sex_status'
     # Create the new_sex_status column for year_3
     df_base[middle_col_name] = df_base.apply(lambda row:
@@ -189,20 +189,20 @@ def sex_vis(df_base: pd.DataFrame) -> None:
     percentage_middle_year_sex_status = df_base[middle_col_name].value_counts(normalize=True).reset_index()
     percentage_middle_year_sex_status.columns = ['status', 'percent']
 
-    embargo_year_name = 'year_' + str(embargo_year) + '_sex_status'
+    embargo_year_name = 'year_' + str(settings.embargo_year) + '_sex_status'
     # Create the new_sex_status column for year 5
     df_base[embargo_year_name] = df_base.apply(lambda row:
                                                row['sex_status'] if pd.isnull(row['spay_neuter_date'])
                                                else 'Female Spayed' if middle_year < row[
-                                                   'spay_neuter_year'] <= embargo_year and row[
+                                                   'spay_neuter_year'] <= settings.embargo_year and row[
                                                    'sex_status'].startswith('Female')
                                                else 'Male Neutered' if middle_year < row[
-                                                   'spay_neuter_year'] <= embargo_year and row[
+                                                   'spay_neuter_year'] <= settings.embargo_year and row[
                                                    'sex_status'].startswith('Male')
-                                               else 'Female Intact' if row['spay_neuter_year'] > embargo_year and row[
+                                               else 'Female Intact' if row['spay_neuter_year'] > settings.embargo_year and row[
                                                    'sex_status'].startswith(
                                                    'Female')
-                                               else 'Male Intact' if row['spay_neuter_year'] > embargo_year and row[
+                                               else 'Male Intact' if row['spay_neuter_year'] > settings.embargo_year and row[
                                                    'sex_status'].startswith('Male')
                                                else row['sex_status'],
                                                axis=1
@@ -214,7 +214,7 @@ def sex_vis(df_base: pd.DataFrame) -> None:
     # Combine the DataFrames for plotting
     percentage_sex_status['Study Year'] = 'Baseline'
     percentage_middle_year_sex_status['Study Year'] = 'Year ' + str(middle_year)
-    percentage_embargo_year_sex_status['Study Year'] = 'Year ' + str(embargo_year)
+    percentage_embargo_year_sex_status['Study Year'] = 'Year ' + str(settings.embargo_year)
 
     combined_df = pd.concat([percentage_sex_status, percentage_middle_year_sex_status, percentage_embargo_year_sex_status])
 
@@ -228,7 +228,7 @@ def sex_vis(df_base: pd.DataFrame) -> None:
     # Plotting
     sns.set_style('whitegrid', {'grid.color': '#ECECEC'})  # HEX code for the grey color of the grid lines
     # Set font properties for title and axis labels
-    prop = font_manager.FontProperties(fname='/usr/local/share/fonts/Buntype - BundaySans-Bold.otf')
+    prop = font_manager.FontProperties(fname=f'{settings.fontpath}/Buntype - BundaySans-Bold.otf')
     plt.figure(figsize=(10, 8))  # Adjust the figure size as needed
     ax = sns.barplot(x='status', y='percent', hue='Study Year', data=combined_df,
                      palette=['#0288D1', '#FF5F1F', '#d0db01'],
@@ -260,7 +260,7 @@ def sex_vis(df_base: pd.DataFrame) -> None:
     plt.title(f'AGE DISTRIBUTIONS AS OF {current_month_year}', fontproperties=prop, fontsize=16)
 
     # Save the plot as a PNG file
-    plt.savefig(vizpath + "sex_status.png")
+    plt.savefig(settings.vizpath + "sex_status.png")
 
     # Display the plot
     # plt.show()
