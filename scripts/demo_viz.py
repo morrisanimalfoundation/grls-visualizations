@@ -68,8 +68,7 @@ def grls_dogs_age_distrbution_vis(dataframe) -> None:
     # Get todays date
     today = pd.to_datetime('today').date()
     # Calculate current age
-    dataframe['current_age'] = (today.year - dataframe['birth_date'].dt.year
-                                - (today.month < dataframe['birth_date'].dt.month))
+    dataframe['current_age'] = (today.year - dataframe['birth_date'].dt.year - (today.month < dataframe['birth_date'].dt.month))
     # Calculate the count of dogs at each age
     age_counts = dataframe['current_age'].value_counts().sort_index()
 
