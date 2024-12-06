@@ -67,17 +67,21 @@ The project structure is organized as follows:
 ```
 grls-visualizations/
 │
-├── demo-viz.py           # Script for Demographic Data visualization
-├── medical-viz.py        # Script for Medical Conditions Data visualization
-├── endpoints-viz.py      # Script for Primary Study Endpoints visualization
-├── diet-viz.py           # Script for Diet Data visualization
-├── behavior-viz.py       # Script for Behavior Data visualization
-├── lifestyle-viz.py      # Script for Lifestyle Data visualization
-├── secrets.py            # Store your secret variables (dirpath, vizpath) here
-├── .gitignore            # Gitignore file to exclude sensitive data and outputs
-├── requirements.txt      # List of Python packages required for this project
+├── scripts/
+│   ├── demo-viz.py           # Script for Demographic Data visualization
+│   ├── medical-viz.py        # Script for Medical Conditions Data visualization
+│   ├── endpoints-viz.py      # Script for Primary Study Endpoints visualization
+│   ├── diet-viz.py           # Script for Diet Data visualization
+│   ├── behavior-viz.py       # Script for Behavior Data visualization
+│   └── lifestyle-viz.py      # Script for Lifestyle Data visualization
 │
-└── README.md             # This README file
+├── Dockerfile                 # Dockerfile for containerizing the application
+├── run.sh                     # Shell script to run the application
+├── settings.py                # Store your secret variables (dirpath, vizpath) here
+├── .gitignore                 # Gitignore file to exclude sensitive data and outputs
+├── requirements.txt           # List of Python packages required for this project
+│
+└── README.md                  # This README file
 ```
 
 ### Contributing
