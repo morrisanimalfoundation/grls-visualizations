@@ -17,3 +17,4 @@ COPY fonts/*.otf /usr/local/share/fonts/
 RUN fc-cache -f -v
 
 USER jenkins
+WORKDIR /workspace
