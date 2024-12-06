@@ -16,12 +16,14 @@ Author: Neha Bhomia
 Created Date: September 19th, 2023
 """
 
-from py_secrets import dirpath, vizpath, fontpath
-import pandas as pd
 from datetime import date
-import matplotlib.pyplot as plt
-import seaborn as sns
+
 import matplotlib.font_manager as font_manager
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
+
+from py_secrets import dirpath, fontpath, vizpath
 
 # reading in our dataset and force setting data types
 # note: adds 01 as default day in date values (raw data format yyyy-mm)
