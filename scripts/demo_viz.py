@@ -11,6 +11,10 @@ as well as the data to generate the graphics titled:
 The datasets that power the visualisations and graphics on this page are:
 1. dog_profile.csv
 """
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
 # Suppressing warnings for category datatype
 # TODO: Investigate this further to prevent technical debt
@@ -23,7 +27,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
-from settings import datapath, embargo_year, vizpath
+from settings import datapath, embargo_year, vizpath, fontpath
 
 warnings.filterwarnings("ignore", "is_categorical_dtype")
 warnings.filterwarnings("ignore", "use_inf_as_na")
@@ -79,7 +83,7 @@ def grls_dogs_age_distrbution_vis(dataframe) -> None:
     # Set the HEX code for the grey colour of the grid lines
     sns.set_style('whitegrid', {'grid.color': '#ECECEC'})
     # Set font properties for title and axis labels
-    prop = font_manager.FontProperties(fname='/usr/local/share/fonts/Buntype - BundaySans-Bold.otf')
+    prop = font_manager.FontProperties(fname=fontpath + 'FiraSansCondensed-Bold.ttf')
     # Adjust the figure size as needed
     plt.figure(figsize=(10, 6))
     # Adjust bar colour using HEX code
@@ -229,7 +233,7 @@ def sex_vis(df_base: pd.DataFrame) -> None:
     # Plotting
     sns.set_style('whitegrid', {'grid.color': '#ECECEC'})  # HEX code for the grey color of the grid lines
     # Set font properties for title and axis labels
-    prop = font_manager.FontProperties(fname='/usr/local/share/fonts/Buntype - BundaySans-Bold.otf')
+    prop = font_manager.FontProperties(fname=fontpath + 'FiraSansCondensed-Bold.ttf')
     plt.figure(figsize=(10, 8))  # Adjust the figure size as needed
     ax = sns.barplot(x='status', y='percent', hue='Study Year', data=combined_df,
                      palette=['#0288D1', '#FF5F1F', '#d0db01'],
