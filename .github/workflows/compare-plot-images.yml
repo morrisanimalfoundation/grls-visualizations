@@ -1,0 +1,77 @@
+name: Plot Image Comparison
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  compare-plots:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout feature branch
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pillow numpy matplotlib pandas
+
+    - name: Install ImageMagick (for optional diff images)
+      run: sudo apt-get install -y imagemagick
+
+    - name: Generate feature branch plots
+      run: |
+        mkdir -p feature_plots
+        for script in scripts/*.py; do
+          echo "Running $script on feature branch..."
+          python "$script" --output_dir feature_plots || echo "Warning: $script failed"
+        done
+
+    - name: Upload feature images
+      uses: actions/upload-artifact@v4
+      with:
+        name: feature-plots
+        path: feature_plots
+
+    - name: Stash changes and checkout main branch
+      run: |
+        git stash --include-untracked
+        git checkout origin/main
+
+    - name: Generate main branch plots
+      run: |
+        mkdir -p main_plots
+        for script in scripts/*.py; do
+          echo "Running $script on main branch..."
+          python "$script" --output_dir main_plots || echo "Warning: $script failed"
+        done
+
+    - name: Upload main images
+      uses: actions/upload-artifact@v4
+      with:
+        name: main-plots
+        path: main_plots
+
+    - name: Checkout back to feature branch
+      run: git checkout -
+
+    - name: Compare images
+      run: |
+        mkdir -p diffs
+        python scripts/image_diff.py main_plots feature_plots diffs || true
+        echo "Image diff completed."
+
+    - name: Upload image diffs (always)
+      uses: actions/upload-artifact@v4
+      with:
+        name: image-diffs
+        path: diffs
