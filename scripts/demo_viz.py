@@ -29,6 +29,8 @@ warnings.filterwarnings("ignore", "is_categorical_dtype")
 warnings.filterwarnings("ignore", "use_inf_as_na")
 warnings.filterwarnings("ignore", category=FutureWarning)
 
+from testing.a11y_accessibility import check_plot_accessibility
+
 
 def read_inputs() -> pd.DataFrame:
     """
@@ -49,7 +51,7 @@ def read_inputs() -> pd.DataFrame:
     return df_profile
 
 
-def grls_dogs_age_distrbution_vis(dataframe) -> None:
+def grls_dogs_age_distrbution_vis(dataframe: pd.DataFrame) -> None:
     """
     Creates the age distribution visualization - a bar graph - with age buckets (in years) on the x-axis and
     dog counts on the y-axis.
@@ -77,10 +79,13 @@ def grls_dogs_age_distrbution_vis(dataframe) -> None:
 
     # Set the HEX code for the grey colour of the grid lines
     sns.set_style('whitegrid', {'grid.color': '#ECECEC'})
+
     # Set font properties for title and axis labels
-    prop = font_manager.FontProperties(fname=f'{settings.fontpath}/Buntype - BundaySans-Bold.otf')
+    prop = font_manager.FontProperties(fname=f"{settings.fontpath}Buntype - BundaySans-Bold.otf")
+
     # Adjust the figure size as needed
-    plt.figure(figsize=(10, 6))
+    fig = plt.figure(figsize=(10, 6))  # Save the figure handle
+
     # Adjust bar colour using HEX code
     sns.barplot(x=age_counts.index, y=age_counts.values, color='#FF5F1F', width=0.7)
     # Add labels on top of each bar
@@ -109,6 +114,9 @@ def grls_dogs_age_distrbution_vis(dataframe) -> None:
     # Uncomment to display the plot
     # plt.show()
 
+    print(f"Dog age visualization successfully produced and saved in the {settings.vizpath} folder.")
+
+    check_plot_accessibility(fig)
 
 def sex_vis(df_base: pd.DataFrame) -> None:
     """
@@ -228,8 +236,8 @@ def sex_vis(df_base: pd.DataFrame) -> None:
     # Plotting
     sns.set_style('whitegrid', {'grid.color': '#ECECEC'})  # HEX code for the grey color of the grid lines
     # Set font properties for title and axis labels
-    prop = font_manager.FontProperties(fname=f'{settings.fontpath}/Buntype - BundaySans-Bold.otf')
-    plt.figure(figsize=(10, 8))  # Adjust the figure size as needed
+    prop = font_manager.FontProperties(fname=f"{settings.fontpath}Buntype - BundaySans-Bold.otf")
+    fig = plt.figure(figsize=(10, 8))  # Adjust the figure size as needed
     ax = sns.barplot(x='status', y='percent', hue='Study Year', data=combined_df,
                      palette=['#0288D1', '#FF5F1F', '#d0db01'],
                      linewidth=2)
@@ -265,9 +273,12 @@ def sex_vis(df_base: pd.DataFrame) -> None:
     # Display the plot
     # plt.show()
 
+    print(f"Dog sex visualization successfully produced and saved in the {settings.vizpath} folder.")
+
+    check_plot_accessibility(fig)
+
 
 if __name__ == "__main__":
-    df_profile = read_inputs()
-    grls_dogs_age_distrbution_vis(df_profile)
-    sex_vis(df_profile)
-    warnings.resetwarnings()
+    dog_profile = read_inputs()
+    grls_dogs_age_distrbution_vis(dog_profile)
+    sex_vis(dog_profile)
