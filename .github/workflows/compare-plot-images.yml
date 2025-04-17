@@ -23,9 +23,9 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pillow numpy matplotlib pandas
+        pip install -r requirements.txt --trusted-host pypi.python.org --no-cache-dir
 
-    - name: Install ImageMagick (for optional diff images)
+    - name: Install ImageMagick (for diff images)
       run: sudo apt-get install -y imagemagick
 
     - name: Generate feature branch plots
