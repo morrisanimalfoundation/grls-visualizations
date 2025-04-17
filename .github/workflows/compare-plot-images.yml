@@ -34,7 +34,7 @@ jobs:
         cd "${GITHUB_WORKSPACE}"  
         for script in scripts/*.py; do
           echo "Running $script on feature branch..."
-          PYTHONPATH=$(pwd) python "$script" --output_dir feature_plots || echo "Warning: $script failed"
+          PYTHONPATH=. python "$script" --output_dir feature_plots
         done
 
     - name: Upload feature images
@@ -54,7 +54,7 @@ jobs:
         cd "${GITHUB_WORKSPACE}" 
         for script in scripts/*.py; do
           echo "Running $script on main branch..."
-          PYTHONPATH=$(pwd) python "$script" --output_dir main_plots || echo "Warning: $script failed"
+          PYTHONPATH=. python "$script" --output_dir main_plots
         done
 
     - name: Upload main images
