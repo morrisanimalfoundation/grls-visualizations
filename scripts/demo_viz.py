@@ -24,12 +24,11 @@ import pandas as pd
 import seaborn as sns
 
 import settings
+from testing.a11y_accessibility import check_plot_accessibility
 
 warnings.filterwarnings("ignore", "is_categorical_dtype")
 warnings.filterwarnings("ignore", "use_inf_as_na")
 warnings.filterwarnings("ignore", category=FutureWarning)
-
-from testing.a11y_accessibility import check_plot_accessibility
 
 
 def read_inputs() -> pd.DataFrame:
@@ -117,6 +116,7 @@ def grls_dogs_age_distrbution_vis(dataframe: pd.DataFrame) -> None:
     print(f"Dog age visualization successfully produced and saved in the {settings.vizpath} folder.")
 
     check_plot_accessibility(fig)
+
 
 def sex_vis(df_base: pd.DataFrame) -> None:
     """
