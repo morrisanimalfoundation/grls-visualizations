@@ -58,8 +58,21 @@ def plot_behavior_chart(df_subset, rename_map, ordered_topics, ax, legend_labels
 
     # Formatting
     ax.set_yticks(range(len(df)))
-    ax.set_yticklabels(df['topic'])
+    # Remove default tick labels
+    ax.set_yticklabels([])
 
+    # Add left-aligned topic labels outside the axes
+    for i, label in enumerate(df['topic']):
+        ax.text(
+            -0.22,  # Shift further left in axes coords (0 = left edge, 1 = right edge)
+            i,
+            label,
+            transform=ax.get_yaxis_transform(),
+            ha='left',
+            va='center',
+            fontsize=12,
+            fontweight='bold'
+        )
     ax.tick_params(axis='y', which='major', pad=30)
     ax.tick_params(axis='y', length=0)
 
